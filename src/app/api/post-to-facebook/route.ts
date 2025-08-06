@@ -31,8 +31,9 @@ export async function POST(request: Request) {
     const url = `https://graph.facebook.com/${pageId}/photos`;
     const response = await axios.post(url, fbFormData, { headers: fbFormData.getHeaders() });
     return NextResponse.json({ success: true, data: response.data });
-  } catch (error: any) {
-    console.error(error.response?.data || error);
-    return NextResponse.json({ success: false, error: error.response?.data?.error || 'Lỗi không xác định' }, { status: 500 });
+  } catch (error: unknown) {
+    const axiosError = error as { response?: { data?: { error?: string } } };
+    console.error(axiosError.response?.data || error);
+    return NextResponse.json({ success: false, error: axiosError.response?.data?.error || 'Lỗi không xác định' }, { status: 500 });
   }
 }

@@ -10,7 +10,7 @@ export default function Admin() {
     
     // Các state cũ
     const [settings, setSettings] = useState<{ gemini_api_key?: string }>({});
-    const [pages, setPages] = useState<any[]>([]);
+    const [pages, setPages] = useState<Array<{ id: string; name: string; access_token: string }>>([]);
     const [selectedPage, setSelectedPage] = useState('');
     const [status, setStatus] = useState('');
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,7 +34,7 @@ export default function Admin() {
                     const pagesRes = await axios.get('/api/facebook/pages');
                     setPages(pagesRes.data || []);
                 }
-            } catch (error) { console.error(error); }
+            } catch { console.error('Error fetching initial data'); }
         };
         fetchInitialData();
     }, [searchParams]);
@@ -63,7 +63,7 @@ export default function Admin() {
             };
             await axios.post('/api/admin/settings', dataToSave);
             setStatus('✅ Đã lưu cài đặt thành công!');
-        } catch (error) { setStatus('❌ Lưu cài đặt thất bại.'); }
+        } catch { setStatus('❌ Lưu cài đặt thất bại.'); }
     };
     
     return (

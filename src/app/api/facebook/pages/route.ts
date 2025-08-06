@@ -12,7 +12,7 @@ export async function GET() {
   try {
     const response = await axios.get(url);
     return NextResponse.json(response.data.data || []);
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Không thể lấy Fanpage' }, { status: 400 });
   }
 }

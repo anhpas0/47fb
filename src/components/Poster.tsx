@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import Image from 'next/image';
 
 // Định nghĩa lại cấu trúc của Settings để sử dụng trong Poster
 interface AppSettings {
@@ -63,7 +64,7 @@ export default function Poster() {
             const res = await axios.post('/api/generate-description', formData);
             setDescription(res.data.description);
             setStatus('✅ Tạo mô tả thành công!');
-        } catch (error) { setStatus('❌ Lỗi: Không thể tạo mô tả.'); }
+        } catch { setStatus('❌ Lỗi: Không thể tạo mô tả.'); }
         finally { setIsLoading(false); }
     };
 
@@ -91,7 +92,10 @@ export default function Poster() {
                 setStatus(scheduledTime ? '🎉 Đã hẹn lịch thành công!' : '🎉 Đăng bài thành công!');
                 setImage(null); setPreview(''); setDescription(''); setScheduledTime('');
             } else { setStatus(`❌ Lỗi: ${res.data.error?.message || 'Lỗi không xác định'}`); }
-        } catch (error: any) { setStatus(`❌ Lỗi: ${error.response?.data?.error?.message || 'Không thể kết nối.'}`); }
+        } catch (error: unknown) { 
+            const axiosError = error as { response?: { data?: { error?: { message?: string } } } };
+            setStatus(`❌ Lỗi: ${axiosError.response?.data?.error?.message || 'Không thể kết nối.'}`); 
+        }
         finally { setIsLoading(false); }
     };
     
@@ -105,7 +109,7 @@ export default function Poster() {
                     {/* ... (Phần này giữ nguyên không đổi) ... */}
                     <h3 className="font-bold text-lg">1. Tải ảnh lên</h3>
                     <input type="file" accept="image/*" onChange={handleImageChange} disabled={isLoading} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
-                    {preview && <img src={preview} alt="Xem trước" className="rounded-lg border" />}
+                    {preview && <Image src={preview} alt="Xem trước" className="rounded-lg border" width={400} height={300} />}
                     <button onClick={handleGenerateDescription} disabled={isLoading || !image} className="w-full px-4 py-2 bg-purple-600 text-white rounded disabled:bg-purple-300">Tạo mô tả với Gemini</button>
                 </div>
                 {/* Panel phải */}

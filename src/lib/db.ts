@@ -34,7 +34,8 @@ export async function getSettings(): Promise<Settings> {
 // Trên Vercel, chúng ta không thể ghi vào file.
 // Việc lưu cài đặt sẽ được thực hiện trên dashboard của Vercel.
 // Hàm này được giữ lại để code không bị lỗi, nhưng nó không làm gì cả.
-export async function saveSettings(newSettings: Partial<Settings>): Promise<void> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function saveSettings(_newSettings: Partial<Settings>): Promise<void> {
   console.log("Lưu ý: Chức năng saveSettings không hoạt động trên Vercel. Vui lòng cập nhật Biến môi trường trên dashboard.");
   return Promise.resolve();
 }
